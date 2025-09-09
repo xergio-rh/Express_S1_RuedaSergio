@@ -1,0 +1,29 @@
+{
+    "grupo": [
+        {
+            "salon": "Atermis",
+            "trainer": "pedro",
+            "estudiantes": [
+                {
+                    "Nombre": "egarrrrrr"
+                }
+            ],
+            "horario": "1",
+            "ruta": "Java"
+        },
+        {
+            "salon": "Apolo",
+            "trainer": "miguel",
+            "estudiantes": [],
+            "horario": "3",
+            "ruta": "NodeJS"
+        },
+        {
+            "salon": "Sputnik",
+            "trainer": "pedro",
+            "estudiantes": [],
+            "horario": "3",
+            "ruta": "NodeJS"
+        }
+    ]
+}

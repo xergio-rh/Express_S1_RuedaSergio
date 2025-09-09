@@ -1,0 +1,67 @@
+ {
+    "1":[
+        {
+            "Nombre":"pedro"
+        },
+        {
+            "Nombre":"jolver"
+        },
+        {
+            "Nombre":"juan carlos"
+        },
+        {   "Nombre":"miguel"
+        },
+        {
+            "Nombre":"juan carlos"
+        }
+    ],
+    "2":[
+        {
+
+            "Nombre":"pedro"
+        },
+        {
+            "Nombre":"jolver"
+        },
+        {
+            "Nombre":"juan carlos"
+        },
+        {   "Nombre":"miguel"
+        },{
+            "Nombre":"juan carlos"
+        }
+    ],
+    "3":[
+        {
+            "Nombre":"pedro"
+        },
+        {
+            "Nombre":"jolver"
+        },
+        {
+            "Nombre":"juan carlos"
+        },
+        {   "Nombre":"miguel"
+        },
+        {
+            "Nombre":"carlos"
+        }
+    ],
+    "4":[
+        {
+
+            "Nombre":"pedro"
+        },
+        {
+            "Nombre":"jolver"
+        },
+        {
+            "Nombre":"juan carlos"
+        },
+        {   "Nombre":"miguel"
+        },
+        {
+            "Nombre":"carlos"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "trainers":[{
+        "ID":"1",
+        "Nombre":"pedro",
+        "Apellido":"gomez",
+        "Ruta":"1"
+        },{
+            "ID":"2",
+            "Nombre":"jolver",
+            "Apellido":"",
+            "Ruta":"2"
+        },
+        {
+            "ID":"3",
+            "Nombre":"miguel",
+            "Apellido":"",
+            "Ruta":"3"
+        },
+        {
+            "ID":"4",
+            "Nombre":"juan carlos",
+            "Apellido":"",
+            "Ruta":"1"
+        },
+        {
+            "ID":"5",
+            "Nombre":"carlos",
+            "Apellido":"Rueda",
+            "Ruta":"3"
+        }
+    ]
+}
