@@ -1,38 +1,35 @@
 const express = require('express');
-const path = require('path');
-const fs = require('fs').promises;
-
-// Importa las nuevas rutas para los campers
-const campersRoutes = require('./routes/campers');
-
+const { connectDB, client } = require('./db');
 const app = express();
 const PORT = 3000;
 
-// Middleware para procesar cuerpos de solicitud JSON
+// Importa las rutas para los diferentes perfiles
+const campersRoutes = require('./routes/campers');
+const trainersRoutes = require('./routes/trainers');
+const coordinadorRoutes = require('./routes/coordinador');
+
+// Conecta a MongoDB al iniciar el servidor
+connectDB();
+
 app.use(express.json());
 
-// Función para leer los archivos JSON (la misma que antes)
-async function leerJSON(ruta) {
-    try {
-        const filePath = path.join(__dirname, 'data', `${ruta}.json`);
-        const data = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error(`Error al leer el archivo ${ruta}.json:`, error);
-        return null;
-    }
-}
-
-// Ahora, las rutas de campers se manejarán bajo '/api/campers'
+// Asigna las rutas a sus respectivos prefijos
 app.use('/api/campers', campersRoutes);
+app.use('/api/trainers', trainersRoutes);
+app.use('/api/coordinador', coordinadorRoutes);
 
 // Endpoint de ejemplo para obtener todos los estudiantes
 app.get('/api/estudiantes', async (req, res) => {
-    const estudiantes = await leerJSON('estudiantes');
-    if (estudiantes) {
+    try {
+        const database = client.db('campuslands');
+        const estudiantesCollection = database.collection('estudiantes');
+        
+        const estudiantes = await estudiantesCollection.find({}).toArray(); 
+        
         res.json(estudiantes);
-    } else {
-        res.status(500).send('Error al cargar los datos de estudiantes.');
+    } catch (error) {
+        console.error('Error al obtener estudiantes:', error);
+        res.status(500).send('Error interno del servidor.');
     }
 });
 
