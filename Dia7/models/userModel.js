@@ -1,49 +1,37 @@
-require('dotenv').config();
-const { MongoClient, ObjectId } = require('mongodb');
-const { use } = require('react');
+import { MongoClient, ObjectId } from "mongodb";
+import dotenv from "dotenv";
+dotenv.config();
 
-class UserModel {
-    constructor(db) {
-        this.client = new MongoClient(process.env.MONGODB_URI);
-        this.dbName = process.env.MONGODB_DATABASE;
-    };
+export default class UserModel {
+    constructor() {
+        this.client = new MongoClient(process.env.MONGO_URI);
+        this.dbName = process.env.MONGO_DB;
+    }
+
+
+
 
     async connect() {
-        if (db) return db;
-        await this.client.connect();
-        db = this.client.db(this.dbName);
-        return db.collection(`users`);
-    };
-
-    async findAll() {
+        if(!this.client.topology?.isConnected()){
+            await this.client.connect();
+        }
+        return this.client.db(this.dbName).collection("users");
+    }
+    async createUser(userData){
         const collection = await this.connect();
-        return await collection.find().toArray();
-    };
-
-    async findUserById(_id) {
-        const collection = await this.connect();
-        return await collection.findOne({ _id });
-    };
-
-    async findUserByEmail(email) {
-        const collection = await this.connect();
-        return await collection.findOne({ email });
-    };
-
-    async createUser(userData) {
-        const collection = this.connect();
         return await collection.insertOne(userData);
+    }
+    async findUserByEmail(email){
+        const collection = await this.connect();
+        return await collection.findOne({email});
+    }
+
+    async updateUser(id,newData){
+        const collection = await this.connect();
+        return await collection.updateOne({
+            _id: new ObjectId(id)
+        },{$set:newData})
     };
 
-    async updateUser(_id, userData) {
-        const collection = this.connect();
-        return await collection.replaceOne({ _id }, userData);
-    };
 
-    async deleteUser(_id) {
-        const collection = this.connect();
-        return await collection.deleteOne({ _id });
-    };
-};
-
-module.exports = { UserModel };
+}
