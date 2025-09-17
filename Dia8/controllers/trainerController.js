@@ -1,18 +1,20 @@
 const trainerModel = require('../models/trainerModel');
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
-const loginTrainer = async (req, res) => {
-    const { nombre, id } = req.body;
-    try {
-        const trainer = await trainerModel.findTrainerByCredentials(nombre, id);
-        if (trainer) {
-            res.json({ mensaje: `Bienvenido/a, Trainer ${trainer.Nombre}`, trainer });
-        } else {
-            res.status(401).json({ mensaje: 'Credenciales incorrectas.' });
+const loginTrainer = (req, res, next) => {
+    passport.authenticate('trainer-login', { session: false }, (err, trainer, info) => {
+        if (err || !trainer) {
+            return res.status(401).json({ mensaje: info.message });
         }
-    } catch (error) {
-        console.error('Error en el inicio de sesión del trainer:', error);
-        res.status(500).json({ mensaje: 'Error interno del servidor.' });
-    }
+        req.login(trainer, { session: false }, (err) => {
+            if (err) {
+                res.send(err);
+            }
+            const token = jwt.sign({ id: trainer.ID, nombre: trainer.Nombre, rol: 'trainer' }, process.env.JWT_SECRET);
+            return res.json({ mensaje: 'Inicio de sesión exitoso.', token, trainer });
+        });
+    })(req, res, next);
 };
 
 const calificarCamper = async (req, res) => {

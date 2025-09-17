@@ -1,18 +1,20 @@
 const camperModel = require('../models/camperModel');
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
-const loginCamper = async (req, res) => {
-    const { nombre, id } = req.body;
-    try {
-        const camper = await camperModel.findCamperByCredentials(nombre, id);
-        if (camper) {
-            res.json({ mensaje: `Bienvenido/a, ${camper.Nombre}`, camper });
-        } else {
-            res.status(401).json({ mensaje: 'Credenciales incorrectas.' });
+const loginCamper = (req, res, next) => {
+    passport.authenticate('camper-login', { session: false }, (err, camper, info) => {
+        if (err || !camper) {
+            return res.status(401).json({ mensaje: info.message });
         }
-    } catch (error) {
-        console.error('Error en el inicio de sesión del camper:', error);
-        res.status(500).json({ mensaje: 'Error interno del servidor.' });
-    }
+        req.login(camper, { session: false }, (err) => {
+            if (err) {
+                res.send(err);
+            }
+            const token = jwt.sign({ id: camper.ID, nombre: camper.Nombre, rol: 'camper' }, process.env.JWT_SECRET);
+            return res.json({ mensaje: 'Inicio de sesión exitoso.', token, camper });
+        });
+    })(req, res, next);
 };
 
 const registerCamper = async (req, res) => {

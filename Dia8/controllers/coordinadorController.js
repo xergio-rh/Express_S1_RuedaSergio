@@ -1,18 +1,20 @@
 const coordinadorModel = require('../models/coordinadorModel');
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
-const loginCoordinador = async (req, res) => {
-    const { nombre, id } = req.body;
-    try {
-        const coordinador = await coordinadorModel.findCoordinadorByCredentials(nombre, id);
-        if (coordinador) {
-            res.json({ mensaje: `Bienvenido/a, Coordinador/a ${coordinador.Nombre}`, coordinador });
-        } else {
-            res.status(401).json({ mensaje: 'Credenciales incorrectas.' });
+const loginCoordinador = (req, res, next) => {
+    passport.authenticate('coordinador-login', { session: false }, (err, coordinador, info) => {
+        if (err || !coordinador) {
+            return res.status(401).json({ mensaje: info.message });
         }
-    } catch (error) {
-        console.error('Error en el inicio de sesión del coordinador:', error);
-        res.status(500).json({ mensaje: 'Error interno del servidor.' });
-    }
+        req.login(coordinador, { session: false }, (err) => {
+            if (err) {
+                res.send(err);
+            }
+            const token = jwt.sign({ id: coordinador.ID, nombre: coordinador.Nombre, rol: 'coordinador' }, process.env.JWT_SECRET);
+            return res.json({ mensaje: 'Inicio de sesión exitoso.', token, coordinador });
+        });
+    })(req, res, next);
 };
 
 const getReportePorEstado = async (req, res) => {

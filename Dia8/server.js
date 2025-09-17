@@ -1,7 +1,9 @@
 const express = require('express');
-const { connectDB, client } = require('./db');
+const { connectDB } = require('./db');
 const app = express();
 const PORT = 3000;
+const passport = require('passport'); // Importa passport
+require('./passport'); // Carga la configuración de passport
 
 // Importa las rutas para los diferentes perfiles
 const campersRoutes = require('./routes/campers');
@@ -12,25 +14,16 @@ const coordinadorRoutes = require('./routes/coordinador');
 connectDB();
 
 app.use(express.json());
+app.use(passport.initialize()); // Inicializa passport
 
 // Asigna las rutas a sus respectivos prefijos
 app.use('/api/campers', campersRoutes);
 app.use('/api/trainers', trainersRoutes);
 app.use('/api/coordinador', coordinadorRoutes);
 
-// Endpoint de ejemplo para obtener todos los estudiantes
+// Endpoint de ejemplo (sin proteger)
 app.get('/api/estudiantes', async (req, res) => {
-    try {
-        const database = client.db('campuslands');
-        const estudiantesCollection = database.collection('estudiantes');
-        
-        const estudiantes = await estudiantesCollection.find({}).toArray(); 
-        
-        res.json(estudiantes);
-    } catch (error) {
-        console.error('Error al obtener estudiantes:', error);
-        res.status(500).send('Error interno del servidor.');
-    }
+    // ... (este endpoint puede quedarse o ser movido a un controlador si es necesario)
 });
 
 app.listen(PORT, () => {
